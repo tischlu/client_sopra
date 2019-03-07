@@ -7,6 +7,7 @@ import { withRouter } from "react-router-dom";
 import { Button } from "../../views/design/Button";
 import AppRouter from "../shared/routers/AppRouter";
 
+
 const FormContainer = styled.div`
   margin-top: 2em;
   display: flex;
@@ -21,7 +22,7 @@ const Form = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 60%;
-  height: 375px;
+  height: 550px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
@@ -63,26 +64,52 @@ class Register extends React.Component {
             <BaseContainer>
                 <FormContainer>
                     <Form>
+                        <Label>Name</Label>
+                        <InputField
+                            placeholder="Enter your name..."
+                            //onChange={e => {
+                            //    this.handleInputChange("username", e.target.value);
+                            //}}
+                        />
                         <Label>Username</Label>
-
+                        <InputField
+                            placeholder="Choose a username..."
+                            //onChange={e => {
+                            //    this.handleInputChange("username", e.target.value);
+                            //}}
+                        />
+                        <Label>Email</Label>
+                        <InputField
+                            placeholder="Enter a valid email address..."
+                            //onChange={e => {
+                            //    this.handleInputChange("username", e.target.value);
+                            //}}
+                        />
 
                         <Label>Password</Label>
+                        <InputField
+                            placeholder="Choose a password..."
+                            //onChange={e => {
+                            //    this.handleInputChange("username", e.target.value);
+                            //}}
+                        />
+                        <Label>Birthday</Label>
+                        <InputField
+                            placeholder="DD/MM/YYYY"
+                            //onChange={e => {
+                            //    this.handleInputChange("username", e.target.value);
+                            //}}
+                        />
+
 
                         <ButtonContainer>
                             <Button
                                 width="50%"
+                               // onClick={() => {
+                                //    this.register();
+                               // }}
                             >
-                                Login
-                            </Button>
-                        </ButtonContainer>
-                        <ButtonContainer>
-                            <Button
-                                width="50%"
-                                onClick={() => {
-                                    this.register();
-                                }}
-                            >
-                                New User? Sign In!
+                                Submit
                             </Button>
 
                         </ButtonContainer>
