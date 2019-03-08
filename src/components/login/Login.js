@@ -97,6 +97,9 @@ class Login extends React.Component {
     // hier assignment, change login procedure
         .then(response => response.json())
         .then(returnedUser => {
+          if (returnedUser.status === 409) {
+            window.alert("invalid username or password")
+          }
           const user = new User(returnedUser);
           // store the token into the local storage
           localStorage.setItem("token", user.token);
