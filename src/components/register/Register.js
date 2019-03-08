@@ -60,6 +60,57 @@ const ButtonContainer = styled.div`
 `;
 
 class Register extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            name: null,
+            username: null,
+            email: null,
+            password: null,
+            birthday: null
+
+        };
+    }
+
+    register() {
+        fetch(`${getDomain()}/users`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: this.state.username,
+                name: this.state.name,
+                password: this.state.password,
+                email: this.state.email,
+                birthday: this.state.birthday
+            })
+        })
+        // hier assignment, change login procedure
+            .then(response => response.json())
+            .then(returnedUser => {
+                const user = new User(returnedUser);
+                // store the token into the local storage
+                // user login successfully worked --> navigate to the route /game in the GameRouter
+                this.props.history.push(`/game`);
+            })
+            .catch(err => {
+                if (err.message.match(/Failed to fetch/)) {
+                    alert("The server cannot be reached. Did you start it?");
+                } else {
+                    alert(`Something went wrong during the login: ${err.message}`);
+                }
+            });
+    }
+
+    handleInputChange(key, value) {
+        // Example: if the key is username, this statement is the equivalent to the following one:
+        // this.setState({'username': value});
+        this.setState({ [key]: value });
+    }
+
+    componentDidMount() {}
+
     render() {
         return (
             <BaseContainer>
@@ -68,47 +119,48 @@ class Register extends React.Component {
                         <Label>Name</Label>
                         <InputField
                             placeholder="Enter your name..."
-                            //onChange={e => {
-                            //    this.handleInputChange("username", e.target.value);
-                            //}}
+                            onChange={e => {
+                                this.handleInputChange("name", e.target.value);
+                            }}
                         />
                         <Label>Username</Label>
                         <InputField
                             placeholder="Choose a username..."
-                            //onChange={e => {
-                            //    this.handleInputChange("username", e.target.value);
-                            //}}
+                            onChange={e => {
+                                this.handleInputChange("username", e.target.value);
+                            }}
                         />
                         <Label>Email</Label>
                         <InputField
                             placeholder="Enter a valid email address..."
-                            //onChange={e => {
-                            //    this.handleInputChange("username", e.target.value);
-                            //}}
+                            onChange={e => {
+                                this.handleInputChange("email", e.target.value);
+                            }}
                         />
 
                         <Label>Password</Label>
                         <InputField
                             placeholder="Choose a password..."
-                            //onChange={e => {
-                            //    this.handleInputChange("username", e.target.value);
-                            //}}
+                            onChange={e => {
+                                this.handleInputChange("password", e.target.value);
+                            }}
                         />
                         <Label>Birthday</Label>
                         <InputField
-                            placeholder="DD/MM/YYYY"
-                            //onChange={e => {
-                            //    this.handleInputChange("username", e.target.value);
-                            //}}
+                            placeholder="DD.MM.YYYY"
+                            onChange={e => {
+                                this.handleInputChange("birthday", e.target.value);
+                            }}
                         />
 
 
                         <ButtonContainer>
                             <Button
+                                disabled={!this.state.username || !this.state.name || !this.state.password || !this.state.email || !this.state.birthday}
                                 width="50%"
-                               // onClick={() => {
-                                //    this.register();
-                               // }}
+                                onClick={() => {
+                                    this.register();
+                                }}
                             >
                                 Submit
                             </Button>
