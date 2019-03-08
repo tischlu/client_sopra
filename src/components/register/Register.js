@@ -86,13 +86,14 @@ class Register extends React.Component {
                 birthday: this.state.birthday
             })
         })
-        // hier assignment, change login procedure
+
             .then(response => response.json())
             .then(returnedUser => {
                 const user = new User(returnedUser);
                 // store the token into the local storage
+
                 // user login successfully worked --> navigate to the route /game in the GameRouter
-                this.props.history.push(`/game`);
+                this.props.history.push(`/login`);
             })
             .catch(err => {
                 if (err.message.match(/Failed to fetch/)) {
