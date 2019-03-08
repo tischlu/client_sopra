@@ -6,6 +6,7 @@ import User from "../shared/models/User";
 import { withRouter } from "react-router-dom";
 import { Button } from "../../views/design/Button";
 import AppRouter from "../shared/routers/AppRouter";
+import { Login } from "../../components/login/Login";
 
 
 const FormContainer = styled.div`
@@ -22,7 +23,7 @@ const Form = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 60%;
-  height: 550px;
+  height: 600px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
@@ -110,6 +111,18 @@ class Register extends React.Component {
                                // }}
                             >
                                 Submit
+                            </Button>
+
+                        </ButtonContainer>
+
+                        <ButtonContainer>
+                            <Button
+                                width="50%"
+                                 onClick={() => {
+                                     this.props.history.push(`/login`);
+                                 }}
+                            >
+                                Back
                             </Button>
 
                         </ButtonContainer>
