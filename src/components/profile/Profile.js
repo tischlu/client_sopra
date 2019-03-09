@@ -5,6 +5,7 @@ import { getDomain } from "../../helpers/getDomain";
 import User from "../shared/models/User";
 import { withRouter } from "react-router-dom";
 import { Button } from "../../views/design/Button";
+import Register from "../register/Register";
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -20,7 +21,7 @@ const Form = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 60%;
-  height: 375px;
+  height: 675px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
@@ -49,6 +50,12 @@ const Label = styled.label`
   margin-bottom: 10px;
   text-transform: uppercase;
 `;
+const Label2 = styled.label`
+  color: black;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  align-items: center;
+`;
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -62,42 +69,32 @@ class Profile extends React.Component {
             <BaseContainer>
                 <FormContainer>
                     <Form>
-                        <Label>Username</Label>
-                        <InputField
-                            placeholder="Enter here.."
-                            onChange={e => {
-                                this.handleInputChange("username", e.target.value);
-                            }}
-                        />
-                        <Label>Password</Label>
-                        <InputField
-                            type={'password'}
-                            placeholder="Enter here.."
-                            onChange={e => {
-                                this.handleInputChange("password", e.target.value);
-                            }}
-                        />
+                        <h2>Name</h2>
+                        <Label>name</Label>
+
+                        <h2>Username:</h2>
+                        <Label>username</Label>
+
+                        <h2>Password:</h2>
+                        <Label>......</Label>
+
+                        <h2>Email:</h2>
+                        <Label>email</Label>
+
+                        <h2>Birthday</h2>
+                        <Label>birthday</Label>
+
                         <ButtonContainer>
                             <Button
-                                disabled={!this.state.username || !this.state.password}
-                                width="50%"
-                                onClick={() => {
-                                    this.login();
-                                }}
-                            >
-                                Login
+                                width="50%">
+                                Edit
                             </Button>
                         </ButtonContainer>
                         <ButtonContainer>
                             <Button
-                                width="50%"
-                                onClick={() => {
-                                    this.register();
-                                }}
-                            >
-                                New User? Sign In!
+                                width="50%">
+                                Log Out
                             </Button>
-
                         </ButtonContainer>
                     </Form>
                 </FormContainer>
@@ -105,3 +102,5 @@ class Profile extends React.Component {
         );
     }
 }
+
+export default withRouter(Profile);

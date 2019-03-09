@@ -5,7 +5,7 @@ import GameRouter from "./GameRouter";
 import { LoginGuard } from "../routeProtectors/LoginGuard";
 import Login from "../../login/Login";
 import Register from "../../register/Register";
-
+import Profile from "../../profile/Profile";
 /**
  * Main router of your application.
  * In the following class, different routes are rendered. In our case, there is a Login Route with matches the path "/login"
@@ -37,7 +37,16 @@ class AppRouter extends React.Component {
                 )}
 
               />
-            <Route
+              <Route
+                  path="/profile"
+                  exact
+                  render={() => (
+                      <Profile />
+                  )}
+
+              />
+
+              <Route
               path="/login"
               exact
               render={() => (
