@@ -95,7 +95,18 @@ class Login extends React.Component {
       })
     })
     // hier assignment, change login procedure
-        .then(response => response.json())
+        //.then(response => response.json())
+        .then(async response => {
+          if (!response.ok) {
+            const errMessage = await response.json();
+            console.log(errMessage);
+            const errURL = "/error?code=" + response.status + "&error=" + errMessage.error + "&message=" + errMessage.message;
+            this.props.history.push(errURL);
+            return null;
+          } else {
+            this.props.history.push('/game');
+          }
+        })
         .then(returnedUser => {
           if (returnedUser.status === 409) {
             window.alert("invalid username or password")
