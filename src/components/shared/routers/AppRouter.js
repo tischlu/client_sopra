@@ -39,7 +39,6 @@ class AppRouter extends React.Component {
               />
               <Route
                   path="/profile"
-                  exact
                   render={() => (
                       <Profile />
                   )}

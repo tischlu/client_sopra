@@ -104,7 +104,8 @@ class Login extends React.Component {
             this.props.history.push(errURL);
             return null;
           } else {
-            this.props.history.push('/game');
+            //this.props.history.push('/game');
+            this.props.history.push('profile')
           }
         })
         .then(returnedUser => {

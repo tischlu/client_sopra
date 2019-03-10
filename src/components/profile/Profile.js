@@ -6,6 +6,7 @@ import User from "../shared/models/User";
 import { withRouter } from "react-router-dom";
 import { Button } from "../../views/design/Button";
 import Register from "../register/Register";
+import queryString from "query-string";
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -64,6 +65,36 @@ const ButtonContainer = styled.div`
 `;
 
 class Profile extends React.Component {
+
+    componentDidMount() {
+        this.loadData();
+    }
+
+    async loadData() {
+        const values = queryString.parse(this.props.location.search);
+        await this.setState({ id: values.id });
+        fetch(`${getDomain()}/users/${this.state.id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(returnedID => {
+                if (returnedID.status === 409) {
+                    window.alert("invalid username or password")
+                }
+                const idURL = "/users?id=" + returnedID.id;
+                this.props.history.push(idURL);
+            })
+            .catch(err => {
+                if (err.message.match(/Failed to fetch/)) {
+                    alert("The server cannot be reached. Did you start it?");
+                } else {
+                    alert(`Something went wrong during the login: ${err.message}`);
+                }
+            });
+    }
+
     render() {
         return (
             <BaseContainer>
@@ -92,7 +123,10 @@ class Profile extends React.Component {
                         </ButtonContainer>
                         <ButtonContainer>
                             <Button
-                                width="50%">
+                                width="50%"
+                                onClick={() => {
+                                    this.props.history.push(`/login`);
+                                }}>
                                 Log Out
                             </Button>
                         </ButtonContainer>
