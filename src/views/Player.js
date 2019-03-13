@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Button } from "../../src/views/design/Button";
 
 const Container = styled.div`
   margin: 6px 0;
@@ -39,7 +40,11 @@ const Player = ({ user }) => {
   return (
     <Container>
       <Name>{user.name}</Name> <UserName>{user.username}</UserName>
-      <Id>Id: {user.id}</Id>
+      <UserName>
+          <a href={"/users?id=" + user.id}>{user.username}</a>
+      </UserName>
+        <Id>ID: {user.id}</Id>
+
     </Container>
   );
 };

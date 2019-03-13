@@ -6,6 +6,8 @@ import { LoginGuard } from "../routeProtectors/LoginGuard";
 import Login from "../../login/Login";
 import Register from "../../register/Register";
 import Profile from "../../profile/Profile";
+import Overview from "../../overview/Overview";
+
 /**
  * Main router of your application.
  * In the following class, different routes are rendered. In our case, there is a Login Route with matches the path "/login"
@@ -35,14 +37,26 @@ class AppRouter extends React.Component {
                 render={() => (
                     <Register />
                 )}
-
               />
               <Route
                   path="/profile"
                   render={() => (
                       <Profile />
                   )}
+              />
 
+              <Route
+                  path="/overview"
+                  render={() => (
+                      <Overview />
+                  )}
+              />
+
+              <Route
+                  path="/users"
+                  render={() => (
+                      <Profile />
+                  )}
               />
 
               <Route

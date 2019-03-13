@@ -94,8 +94,8 @@ class Login extends React.Component {
         password: this.state.password
       })
     })
-    // hier assignment, change login procedure
-        //.then(response => response.json())
+    // error message is still not working properly
+
         .then(async response => {
           if (!response.ok) {
             const errMessage = await response.json();
@@ -105,18 +105,19 @@ class Login extends React.Component {
             return null;
           } else {
             //this.props.history.push('/game');
-            this.props.history.push('profile')
+            this.props.history.push('/overview')
           }
         })
+
         .then(returnedUser => {
-          if (returnedUser.status === 409) {
-            window.alert("invalid username or password")
+          if (returnedUser !== null) {
+
+            const user = new User(returnedUser);
+            // store the token into the local storage
+            localStorage.setItem("token", user.token);
+            // user login successfully worked --> navigate to the route /game in the GameRouter
+            this.props.history.push(`/game`);
           }
-          const user = new User(returnedUser);
-          // store the token into the local storage
-          localStorage.setItem("token", user.token);
-          // user login successfully worked --> navigate to the route /game in the GameRouter
-          this.props.history.push(`/game`);
         })
         .catch(err => {
           if (err.message.match(/Failed to fetch/)) {

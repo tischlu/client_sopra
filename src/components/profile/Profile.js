@@ -8,6 +8,7 @@ import { Button } from "../../views/design/Button";
 import Register from "../register/Register";
 import queryString from "query-string";
 
+
 const FormContainer = styled.div`
   margin-top: 2em;
   display: flex;
@@ -66,6 +67,14 @@ const ButtonContainer = styled.div`
 
 class Profile extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.stae = {
+            user: null,
+            id: null
+        };
+    }
+
     componentDidMount() {
         this.loadData();
     }
@@ -79,13 +88,23 @@ class Profile extends React.Component {
                 "Content-Type": "application/json"
             }
         })
-            .then(returnedID => {
-                if (returnedID.status === 409) {
-                    window.alert("invalid username or password")
+            .then(async response => {
+                if (!response.ok) {
+                    const errorMsg = await response.json();
+                    const errorURL =
+                        "/error?code=" +
+                        response.status +
+                        "&error=" +
+                        errorMsg.error +
+                        "&message=" +
+                        errorMsg.message;
+                    this.props.history.push(errorURL);
+                    return null;
+                } else {
+                    return response.json();
                 }
-                const idURL = "/users?id=" + returnedID.id;
-                this.props.history.push(idURL);
             })
+
             .catch(err => {
                 if (err.message.match(/Failed to fetch/)) {
                     alert("The server cannot be reached. Did you start it?");
@@ -101,7 +120,7 @@ class Profile extends React.Component {
                 <FormContainer>
                     <Form>
                         <h2>Name</h2>
-                        <Label>name</Label>
+                        <Label>{this.state.user.name}</Label>
 
                         <h2>Username:</h2>
                         <Label>username</Label>
@@ -125,9 +144,9 @@ class Profile extends React.Component {
                             <Button
                                 width="50%"
                                 onClick={() => {
-                                    this.props.history.push(`/login`);
+                                    this.props.history.push(`/users`);
                                 }}>
-                                Log Out
+                                Back
                             </Button>
                         </ButtonContainer>
                     </Form>
