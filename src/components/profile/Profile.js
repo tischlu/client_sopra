@@ -7,6 +7,7 @@ import { withRouter } from "react-router-dom";
 import { Button } from "../../views/design/Button";
 import Register from "../register/Register";
 import queryString from "query-string";
+import {Spinner} from "../../views/design/Spinner";
 
 
 const FormContainer = styled.div`
@@ -69,7 +70,7 @@ class Profile extends React.Component {
 
     constructor(props) {
         super(props);
-        this.stae = {
+        this.state = {
             user: null,
             id: null
         };
@@ -104,6 +105,9 @@ class Profile extends React.Component {
                     return response.json();
                 }
             })
+            .then(async user => {
+                await this.setState({user: user});
+            })
 
             .catch(err => {
                 if (err.message.match(/Failed to fetch/)) {
@@ -117,22 +121,23 @@ class Profile extends React.Component {
     render() {
         return (
             <BaseContainer>
+                {!this.state.user ? (
+                    <Spinner/>
+                ) :
                 <FormContainer>
                     <Form>
-                        <h2>Name</h2>
-                        <Label>{this.state.user.name}</Label>
 
                         <h2>Username:</h2>
-                        <Label>username</Label>
+                        <Label>{this.state.user.username}</Label>
 
-                        <h2>Password:</h2>
-                        <Label>......</Label>
+                        <h2>Status:</h2>
+                        <Label>{this.state.user.status}</Label>
 
-                        <h2>Email:</h2>
-                        <Label>email</Label>
+                        <h2>Joined at:</h2>
+                        <Label>{this.state.user.creationDate}</Label>
 
                         <h2>Birthday</h2>
-                        <Label>birthday</Label>
+                        <Label>{this.state.user.birthday}</Label>
 
                         <ButtonContainer>
                             <Button
@@ -144,13 +149,14 @@ class Profile extends React.Component {
                             <Button
                                 width="50%"
                                 onClick={() => {
-                                    this.props.history.push(`/users`);
+                                    this.props.history.push(`/game`);
                                 }}>
                                 Back
                             </Button>
                         </ButtonContainer>
                     </Form>
                 </FormContainer>
+                }
             </BaseContainer>
         );
     }

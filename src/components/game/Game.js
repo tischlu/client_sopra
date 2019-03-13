@@ -12,6 +12,21 @@ const Container = styled(BaseContainer)`
   text-align: center;
 `;
 
+const Form = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 375px;
+  font-size: 16px;
+  font-weight: 300;
+  padding-left: 37px;
+  padding-right: 37px;
+  border-radius: 10px;
+  background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
+  transition: opacity 0.5s ease, transform 0.5s ease;
+`;
+
 const Users = styled.ul`
   list-style: none;
   padding-left: 0;
@@ -62,6 +77,7 @@ class Game extends React.Component {
   render() {
     return (
       <Container>
+        <Form>
         <h2>Happy Coding! </h2>
         <p>Get all users from secure end point:</p>
         {!this.state.users ? (
@@ -87,6 +103,7 @@ class Game extends React.Component {
             </Button>
           </div>
         )}
+        </Form>
       </Container>
     );
   }

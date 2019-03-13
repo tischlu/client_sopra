@@ -39,11 +39,11 @@ const Id = styled.div`
 const Player = ({ user }) => {
   return (
     <Container>
-      <Name>{user.name}</Name> <UserName>{user.username}</UserName>
+      <Name>{user.name}</Name>
       <UserName>
           <a href={"/users?id=" + user.id}>{user.username}</a>
       </UserName>
-        <Id>ID: {user.id}</Id>
+
 
     </Container>
   );
