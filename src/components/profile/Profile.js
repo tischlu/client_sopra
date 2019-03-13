@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import { BaseContainer } from "../../helpers/layout";
 import { getDomain } from "../../helpers/getDomain";
 import User from "../shared/models/User";
@@ -8,6 +7,7 @@ import { Button } from "../../views/design/Button";
 import Register from "../register/Register";
 import queryString from "query-string";
 import {Spinner} from "../../views/design/Spinner";
+import styled from "styled-components";
 
 
 const FormContainer = styled.div`
@@ -66,14 +66,24 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
+
 class Profile extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             user: null,
-            id: null
+            id: null,
+            newUsername: null,
+            newBirthday: null,
+            showEditButton: false
         };
+    }
+
+    handleInputChange(key, value) {
+        // Example: if the key is username, this statement is the equivalent to the following one:
+        // this.setState({'username': value});
+        this.setState({ [key]: value });
     }
 
     componentDidMount() {
@@ -116,6 +126,98 @@ class Profile extends React.Component {
                     alert(`Something went wrong during the login: ${err.message}`);
                 }
             });
+    }
+
+
+    nonEditable = () => {
+        return (
+            <BaseContainer>
+                {!this.state.user ? (
+                        <Spinner/>
+                    ) :
+                    <FormContainer>
+                        <Form>
+
+                            <h2>Username:</h2>
+                            <Label>{this.state.user.username}</Label>
+
+                            <h2>Status:</h2>
+                            <Label>{this.state.user.status}</Label>
+
+                            <h2>Joined at:</h2>
+                            <Label>{this.state.user.creationDate}</Label>
+
+                            <h2>Birthday</h2>
+                            <Label>{this.state.user.birthday}</Label>
+
+                            <ButtonContainer>
+                                <Button
+                                    width="50%">
+                                    Edit
+                                </Button>
+                            </ButtonContainer>
+                            <ButtonContainer>
+                                <Button
+                                    width="50%"
+                                    onClick={() => {
+                                        this.props.history.push(`/game`);
+                                    }}>
+                                    Back
+                                </Button>
+                            </ButtonContainer>
+                        </Form>
+                    </FormContainer>
+                }
+            </BaseContainer>
+        );
+    }
+
+    editable = () => {
+        return (
+            <BaseContainer>
+                {!this.state.user ? (
+                        <Spinner/>
+                    ) :
+                    <FormContainer>
+                        <Form>
+
+                            <h2>Username:</h2>
+                            <InputField
+                                placeholder="Enter here.."
+                                onChange={e => {
+                                    this.handleInputChange("username", e.target.value);
+                                }}
+                            />
+
+                            <h2>Status:</h2>
+                            <Label>{this.state.user.status}</Label>
+
+                            <h2>Joined at:</h2>
+                            <Label>{this.state.user.creationDate}</Label>
+
+                            <h2>Birthday</h2>
+                            <Label>{this.state.user.birthday}</Label>
+
+                            <ButtonContainer>
+                                <Button
+                                    width="50%">
+                                    Edit
+                                </Button>
+                            </ButtonContainer>
+                            <ButtonContainer>
+                                <Button
+                                    width="50%"
+                                    onClick={() => {
+                                        this.props.history.push(`/game`);
+                                    }}>
+                                    Back
+                                </Button>
+                            </ButtonContainer>
+                        </Form>
+                    </FormContainer>
+                }
+            </BaseContainer>
+        );
     }
 
     render() {
