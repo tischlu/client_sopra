@@ -77,7 +77,6 @@ class Game extends React.Component {
   render() {
     return (
       <Container>
-        <Form>
         <h2>Happy Coding! </h2>
         <p>Get all users from secure end point:</p>
         {!this.state.users ? (
@@ -103,7 +102,7 @@ class Game extends React.Component {
             </Button>
           </div>
         )}
-        </Form>
+        
       </Container>
     );
   }

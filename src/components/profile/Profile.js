@@ -350,8 +350,8 @@ class Profile extends React.Component {
                                 <td>{this.state.user.status}</td>
                             </tr>
                             <tr>
-                                <td>Registration Date:</td>
-                                <td>{this.state.user.registrationDate}</td>
+                                <td>Join Date:</td>
+                                <td>{this.state.user.creationDate}</td>
                             </tr>
                             <tr>
                                 <td>Birthday:</td>
