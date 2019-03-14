@@ -9,6 +9,12 @@ import queryString from "query-string";
 import {Spinner} from "../../views/design/Spinner";
 import styled from "styled-components";
 
+const Container = styled(BaseContainer)`
+  display: flex;
+  color: white;
+  text-align: center;
+  justify-content: center;
+`;
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -17,6 +23,15 @@ const FormContainer = styled.div`
   align-items: center;
   min-height: 300px;
   justify-content: center;
+`;
+
+const InvisTable = styled.table`
+  display: flex;
+  flex-direction: column;
+  border: none;
+  color: inherit;
+  text-align: left;
+  background-color: inherit;
 `;
 
 const Form = styled.div`
@@ -77,12 +92,13 @@ class Profile extends React.Component {
             token: null,
             newUsername: null,
             newBirthday: null,
-            showEditButton: false
+            showEditButton: false,
+            showChangeUsername: false,
+            showChangeBirthday: false
         };
     }
 
     async checkToken () {
-        alert(`user token ${this.state.user.token}`)
         if(localStorage.getItem("token") === this.state.user.token) {
             this.setState({showEditButton: true})
         } else {
@@ -90,12 +106,15 @@ class Profile extends React.Component {
         }
     }
 
-    editInfo() {
+    async editInfo() {
+        await this.setState({user: null});
         const changes = JSON.stringify({
             username: this.state.username,
             id: this.state.id,
-            birthday: this.state.birthday
+            birthday: this.state.birthday,
+            token: this.user.token
         });
+
         fetch(`${getDomain()}/users/${this.state.id}`, {
             method: "PUT",
             headers: {
@@ -126,6 +145,14 @@ class Profile extends React.Component {
                 console.log(err);
                 alert("Something went wrong: " + err);
             });
+
+        this.setState({
+            newUsername: "username",
+            newBirthday: "00.00.0000"
+        });
+        await this.loadData();
+
+
     }
 
     handleInputChange(key, value) {
@@ -142,10 +169,8 @@ class Profile extends React.Component {
 
 
         const values = queryString.parse(this.props.location.search);
-        alert(`id${values.id}`);
 
         await this.setState({ id: values.id });
-        alert(`id${this.state.id}`);
         fetch(`${getDomain()}/users/${this.state.id}`, {
             method: "GET",
             headers: {
@@ -170,7 +195,12 @@ class Profile extends React.Component {
                 }
             })
             .then(async user => {
-                await this.setState({user: user});
+                await new Promise(resolve => setTimeout(resolve, 800));
+                console.log(user);
+                await this.setState({ user: user });
+                await this.setState({ newUsername: user.username });
+                await this.setState({ newBirthday: user.birthday });
+                await this.setState( { token: user.token});
             })
 
             .catch(err => {
@@ -180,53 +210,6 @@ class Profile extends React.Component {
                     alert(`Something went wrong during the login: ${err.message}`);
                 }
             });
-    }
-
-
-    nonEditable = () => {
-        return (
-            <BaseContainer>
-                {!this.state.user ? (
-                        <Spinner/>
-                    ) :
-                    <FormContainer>
-                        <Form>
-
-                            <h2>Username:</h2>
-                            <Label>{this.state.user.username}</Label>
-
-                            <h2>Status:</h2>
-                            <Label>{this.state.user.status}</Label>
-
-                            <h2>Joined at:</h2>
-                            <Label>{this.state.user.creationDate}</Label>
-
-                            <h2>Birthday</h2>
-                            <Label>{this.state.user.birthday}</Label>
-
-                            <ButtonContainer>
-                                <Button
-                                    width="50%"
-                                    onClick={() => {
-                                        this.editable();
-                                    }}>
-                                    Edit
-                                </Button>
-                            </ButtonContainer>
-                            <ButtonContainer>
-                                <Button
-                                    width="50%"
-                                    onClick={() => {
-                                        this.props.history.push(`/game`);
-                                    }}>
-                                    Back
-                                </Button>
-                            </ButtonContainer>
-                        </Form>
-                    </FormContainer>
-                }
-            </BaseContainer>
-        );
     }
 
     editable = () => {
@@ -240,7 +223,7 @@ class Profile extends React.Component {
 
                             <h2>Username:</h2>
                             <InputField
-                                placeholder="Enter new username"
+                                placeholder="New username"
                                 onChange={e => {
                                     this.handleInputChange("newUsername", e.target.value);
                                 }}
@@ -254,7 +237,7 @@ class Profile extends React.Component {
 
                             <h2>Birthday</h2>
                             <InputField
-                                placeholder="Change birthday date"
+                                placeholder="DD.MM.YYYY"
                                 onChange={e => {
                                     this.handleInputChange("newBirthday", e.target.value);
                                 }}
@@ -276,6 +259,7 @@ class Profile extends React.Component {
         );
     }
 
+/*
     render() {
         return (
             <BaseContainer>
@@ -300,7 +284,10 @@ class Profile extends React.Component {
                         <ButtonContainer>
                             <Button
                                 disabled={this.state.showEditButton}
-                                width="50%">
+                                width="50%"
+                                onClick={() => {
+                                    this.editable();
+                                }}>
                                 Edit
                             </Button>
                         </ButtonContainer>
@@ -317,6 +304,113 @@ class Profile extends React.Component {
                 </FormContainer>
                 }
             </BaseContainer>
+        );
+    }
+    */
+    render() {
+        return (
+            <Container>
+                <div>
+                    {!this.state.user ? (
+                        <Spinner />
+                    ) : (
+                        <InvisTable>
+                            <tbody>
+                            <tr>
+                                <td>Username:</td>
+                                <td>{this.state.user.username}</td>
+                                <td>
+                                    {localStorage.getItem("token") === this.state.token ? (
+                                        !this.state.showChangeUsername ? (
+                                            <Button
+                                                onClick={() => {
+                                                    this.setState({ showChangeUsername: true });
+                                                }}
+                                            >
+                                                Edit
+                                            </Button>
+                                        ) : (
+                                            <div>
+                                                <InputField
+                                                    placeholder="Enter new username"
+                                                    onChange={e => {
+                                                        this.handleInputChange(
+                                                            "newUsername",
+                                                            e.target.value
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
+                                        )
+                                    ) : null}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Status:</td>
+                                <td>{this.state.user.status}</td>
+                            </tr>
+                            <tr>
+                                <td>Registration Date:</td>
+                                <td>{this.state.user.registrationDate}</td>
+                            </tr>
+                            <tr>
+                                <td>Birthday:</td>
+                                <td>{this.state.user.birthday}</td>
+                                <td>
+                                    {localStorage.getItem("token") === this.state.token ? (
+                                        !this.state.showChangeBirthday ? (
+                                            <Button
+                                                onClick={() => {
+                                                    this.setState({ showChangeBirthday: true });
+                                                }}
+                                            >
+                                                Edit
+                                            </Button>
+                                        ) : (
+                                            <div>
+                                                <InputField
+                                                    placeholder="DD.MM.YYYY"
+                                                    onChange={e => {
+                                                        this.handleInputChange(
+                                                            "newBirthday",
+                                                            e.target.value
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
+                                        )
+                                    ) : null}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </InvisTable>
+                    )}
+                    {this.state.showChangeBirthday || this.state.showChangeUsername ? (
+                        <Button
+                            width="50%"
+                            onClick={() => {
+                                this.editInfo();
+                                this.setState({
+                                    showChangeBirthday: false,
+                                    showChangeUsername: false
+                                });
+                            }}
+                        >
+                            Submit Changes
+                        </Button>
+                    ) : null}
+                    <ButtonContainer>
+                        <Button
+                            width="50%"
+                            onClick={() => {
+                                this.props.history.push("/game/dashboard");
+                            }}
+                        >
+                            Back
+                        </Button>
+                    </ButtonContainer>
+                </div>
+            </Container>
         );
     }
 }
