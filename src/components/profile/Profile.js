@@ -110,39 +110,19 @@ class Profile extends React.Component {
                 "Content-Type": "application/json"
             }, body: changes
         })
-        //new (no change
+        //not working properly
             .then(async response => {
                 if (!response.ok) {
                     const errMessage = await response.json();
                     console.log(errMessage);
                     const errURL = "/error?code=" + response.status + "&error=" + errMessage.error + "&message=" + errMessage.message;
                     this.props.history.push(errURL);
-                    //return null;
                 } else {
-                    //this.props.history.push('/game');
-                    //localStorage.setItem("token", user.token);
-                    //before: return response;
-                    //this.props.history.push('/game')
-                    //new:
+
                     await new Promise(resolve => setTimeout(resolve, 800))
                 }
             })
-            //before
-            /*
-            .then( response => response.json())
-            .then(async user => {
-                await alert(`khsad ${user.username}`);
-                await this.setState({ user: user });
-                await this.setState({ newUsername: user.username });
-                await this.setState({ newBirthday: user.birthday });
 
-            })
-
-            .catch(err => {
-                console.log(err);
-                alert("Something went wrong: " + err);
-            });
-            */
             .catch(err => {
                 if (err.message.match(/Failed to fetch/)) {
                     alert("The server cannot be reached. Did you start it?");
@@ -180,30 +160,10 @@ class Profile extends React.Component {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
-                //new (crashes)
-                // "token": this.user.token
+
             }
         })
-        //before
-        /*
-        .then(async response => {
-            if (!response.ok) {
-                alert("not ok");
-                const errorMsg = await response.json();
-                const errorURL =
-                    "/error?code=" +
-                    response.status +
-                    "&error=" +
-                    errorMsg.error +
-                    "&message=" +
-                    errorMsg.message;
-                this.props.history.push(errorURL);
-                //return null;
-            } else {
-                return response.json();
-            }
-        }) */
-        //new (no change)
+
             .then(async response => {
                 if (!response.ok) {
                     const errorMsg = await response.json();

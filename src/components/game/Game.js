@@ -61,9 +61,6 @@ class Game extends React.Component {
     })
       .then(response => response.json())
       .then(async users => {
-        // delays continuous execution of an async operation for 0.8 seconds.
-        // This is just a fake async call, so that the spinner can be displayed
-        // feel free to remove it :)
         await new Promise(resolve => setTimeout(resolve, 800));
 
         this.setState({ users });

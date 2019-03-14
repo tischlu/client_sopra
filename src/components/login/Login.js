@@ -102,12 +102,9 @@ class Login extends React.Component {
             console.log(errMessage);
             const errURL = "/error?code=" + response.status + "&error=" + errMessage.error + "&message=" + errMessage.message;
             this.props.history.push(errURL);
-            //return null;
           } else {
-            //this.props.history.push('/game');
-            //localStorage.setItem("token", user.token);
+
             return response;
-            //this.props.history.push('/game')
           }
         })
         .then(response => response.json())

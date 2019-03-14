@@ -33,7 +33,6 @@ class Overview extends React.Component {
     }
 
     logout() {
-        //localStorage.removeItem("token");
         this.props.history.push("/login");
     }
 
