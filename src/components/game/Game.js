@@ -102,7 +102,7 @@ class Game extends React.Component {
             </Button>
           </div>
         )}
-        
+
       </Container>
     );
   }
