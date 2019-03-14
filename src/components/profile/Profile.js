@@ -74,10 +74,58 @@ class Profile extends React.Component {
         this.state = {
             user: null,
             id: null,
+            token: null,
             newUsername: null,
             newBirthday: null,
             showEditButton: false
         };
+    }
+
+    async checkToken () {
+        alert(`user token ${this.state.user.token}`)
+        if(localStorage.getItem("token") === this.state.user.token) {
+            this.setState({showEditButton: true})
+        } else {
+            this.setState({showEditButton : false})
+        }
+    }
+
+    editInfo() {
+        const changes = JSON.stringify({
+            username: this.state.username,
+            id: this.state.id,
+            birthday: this.state.birthday
+        });
+        fetch(`${getDomain()}/users/${this.state.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            }, body: changes
+        })
+            .then(async response => {
+                if (!response.ok) {
+                    const errMessage = await response.json();
+                    console.log(errMessage);
+                    const errURL = "/error?code=" + response.status + "&error=" + errMessage.error + "&message=" + errMessage.message;
+                    this.props.history.push(errURL);
+                    //return null;
+                } else {
+                    //this.props.history.push('/game');
+                    //localStorage.setItem("token", user.token);
+                    return response.json();
+                    //this.props.history.push('/game')
+                }
+            })
+            .then(response => response.json())
+            .then(async user => {
+                await this.setState({ user: user });
+                await this.setState({ newUsername: user.username });
+                await this.setState({ newBirthday: user.birthday });
+            })
+            .catch(err => {
+                console.log(err);
+                alert("Something went wrong: " + err);
+            });
     }
 
     handleInputChange(key, value) {
@@ -86,13 +134,18 @@ class Profile extends React.Component {
         this.setState({ [key]: value });
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.loadData();
     }
 
     async loadData() {
+
+
         const values = queryString.parse(this.props.location.search);
+        alert(`id${values.id}`);
+
         await this.setState({ id: values.id });
+        alert(`id${this.state.id}`);
         fetch(`${getDomain()}/users/${this.state.id}`, {
             method: "GET",
             headers: {
@@ -101,6 +154,7 @@ class Profile extends React.Component {
         })
             .then(async response => {
                 if (!response.ok) {
+                    alert("not ok");
                     const errorMsg = await response.json();
                     const errorURL =
                         "/error?code=" +
@@ -110,7 +164,7 @@ class Profile extends React.Component {
                         "&message=" +
                         errorMsg.message;
                     this.props.history.push(errorURL);
-                    return null;
+                    //return null;
                 } else {
                     return response.json();
                 }
@@ -152,7 +206,10 @@ class Profile extends React.Component {
 
                             <ButtonContainer>
                                 <Button
-                                    width="50%">
+                                    width="50%"
+                                    onClick={() => {
+                                        this.editable();
+                                    }}>
                                     Edit
                                 </Button>
                             </ButtonContainer>
@@ -183,9 +240,9 @@ class Profile extends React.Component {
 
                             <h2>Username:</h2>
                             <InputField
-                                placeholder="Enter here.."
+                                placeholder="Enter new username"
                                 onChange={e => {
-                                    this.handleInputChange("username", e.target.value);
+                                    this.handleInputChange("newUsername", e.target.value);
                                 }}
                             />
 
@@ -196,21 +253,20 @@ class Profile extends React.Component {
                             <Label>{this.state.user.creationDate}</Label>
 
                             <h2>Birthday</h2>
-                            <Label>{this.state.user.birthday}</Label>
+                            <InputField
+                                placeholder="Change birthday date"
+                                onChange={e => {
+                                    this.handleInputChange("newBirthday", e.target.value);
+                                }}
+                            />
 
                             <ButtonContainer>
                                 <Button
-                                    width="50%">
-                                    Edit
-                                </Button>
-                            </ButtonContainer>
-                            <ButtonContainer>
-                                <Button
-                                    width="50%"
                                     onClick={() => {
-                                        this.props.history.push(`/game`);
-                                    }}>
-                                    Back
+                                    this.editInfo();
+                                    }}
+                                    width="50%">
+                                    Save
                                 </Button>
                             </ButtonContainer>
                         </Form>
@@ -243,6 +299,7 @@ class Profile extends React.Component {
 
                         <ButtonContainer>
                             <Button
+                                disabled={this.state.showEditButton}
                                 width="50%">
                                 Edit
                             </Button>
