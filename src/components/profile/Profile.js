@@ -68,12 +68,7 @@ const Label = styled.label`
   margin-bottom: 10px;
   text-transform: uppercase;
 `;
-const Label2 = styled.label`
-  color: black;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-  align-items: center;
-`;
+
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -115,11 +110,9 @@ class Profile extends React.Component {
                 "Content-Type": "application/json"
             }, body: changes
         })
-            //new (no change
+        //new (no change
             .then(async response => {
                 if (!response.ok) {
-                    alert("nope");
-                    alert(`${response.status}`);
                     const errMessage = await response.json();
                     console.log(errMessage);
                     const errURL = "/error?code=" + response.status + "&error=" + errMessage.error + "&message=" + errMessage.message;
@@ -188,29 +181,29 @@ class Profile extends React.Component {
             headers: {
                 "Content-Type": "application/json"
                 //new (crashes)
-               // "token": this.user.token
+                // "token": this.user.token
             }
         })
-            //before
-            /*
-            .then(async response => {
-                if (!response.ok) {
-                    alert("not ok");
-                    const errorMsg = await response.json();
-                    const errorURL =
-                        "/error?code=" +
-                        response.status +
-                        "&error=" +
-                        errorMsg.error +
-                        "&message=" +
-                        errorMsg.message;
-                    this.props.history.push(errorURL);
-                    //return null;
-                } else {
-                    return response.json();
-                }
-            }) */
-            //new (no change)
+        //before
+        /*
+        .then(async response => {
+            if (!response.ok) {
+                alert("not ok");
+                const errorMsg = await response.json();
+                const errorURL =
+                    "/error?code=" +
+                    response.status +
+                    "&error=" +
+                    errorMsg.error +
+                    "&message=" +
+                    errorMsg.message;
+                this.props.history.push(errorURL);
+                //return null;
+            } else {
+                return response.json();
+            }
+        }) */
+        //new (no change)
             .then(async response => {
                 if (!response.ok) {
                     const errorMsg = await response.json();
